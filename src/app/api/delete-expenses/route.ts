@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 import { PloteModel } from "@/models/Plote";
 import dbConnect from "@/lib/dbconnect";
-import { object } from "zod";
 import mongoose from "mongoose";
 
 
@@ -56,6 +55,7 @@ export  async function DELETE(request: Request) {
             { status: 200 }
         );
     } catch (error) {
+        console.error('Error deleting expense:', error);
         return Response.json(
             {
                 success: false,

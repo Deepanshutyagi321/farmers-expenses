@@ -4,7 +4,7 @@ import { PloteModel } from "@/models/Plote";
 import dbConnect from "@/lib/dbconnect";
 import mongoose from "mongoose";
 import userModel from "@/models/user";
-import { ChartNoAxesColumnIcon, ConstructionIcon } from "lucide-react";
+
 
 
 export async function DELETE(request: Request) {
@@ -58,6 +58,7 @@ export async function DELETE(request: Request) {
                 message: 'Plot deleted successfully'
             }, { status: 200 });
     } catch (error) {
+        console.error(error);
         return Response.json(
             {
                 success: false,

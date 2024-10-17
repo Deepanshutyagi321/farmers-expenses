@@ -3,7 +3,7 @@ import { signIn, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 export default function SignIn() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center bg-green-100">

@@ -1,14 +1,19 @@
 'use client';
 
 import { signOut, useSession } from "next-auth/react";
+import { useEffect } from "react";
 import { redirect } from "next/navigation";
 
-// import { FaPlusCircle } from 'react-icons/fa';
-
 export default function Dashboard() {
-  const { data: session , status} = useSession();
-  // console.log(session)
-  {status === "unauthenticated" && redirect("/")}
+  const { status } = useSession();
+
+  // Redirect if unauthenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      redirect("/");
+    }
+  }, [status]);
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       {/* Dashboard Header */}
@@ -17,11 +22,9 @@ export default function Dashboard() {
         <button
           className="bg-green-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-green-500"
           onClick={() => signOut()}
-          
         >
           Logout
         </button>
-       
       </div>
 
       {/* Content Section */}
@@ -30,7 +33,6 @@ export default function Dashboard() {
         <div className="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-gray-700">Add New Plot</h2>
-            {/* <FaPlusCircle className="text-green-500 text-3xl" /> */}
           </div>
           <p className="text-gray-600 mb-4">
             Create a new plot to track your expenses.

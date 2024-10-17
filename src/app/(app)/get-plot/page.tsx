@@ -3,8 +3,21 @@ import { useEffect, useState } from "react";
 import axios from "axios"; // Importing axios
 import { useToast } from "@/hooks/use-toast";
 
+// Define the types for plot and expense
+interface Expense {
+    labourCost: number;
+    price: number;
+}
+
+interface Plot {
+    _id: string;
+    title: string;
+    createdAt: string;
+    expenseDetails: Expense[];
+}
+
 const CreatePage = () => {
-    const [plots, setPlots] = useState<any[]>([]);
+    const [plots, setPlots] = useState<Plot[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [activeMenu, setActiveMenu] = useState<string | null>(null); // To track the active menu
@@ -55,11 +68,11 @@ const CreatePage = () => {
 
     // Calculate total costs for all plots
     const totalLabourCost = plots.reduce((acc, plot) => {
-        return acc + plot.expenseDetails.reduce((expAcc: any, expense: any) => expAcc + Number(expense.labourCost), 0);
+        return acc + plot.expenseDetails.reduce((expAcc, expense) => expAcc + expense.labourCost, 0);
     }, 0);
 
     const totalPrice = plots.reduce((acc, plot) => {
-        return acc + plot.expenseDetails.reduce((expAcc: any, expense: any) => expAcc + Number(expense.price), 0);
+        return acc + plot.expenseDetails.reduce((expAcc, expense) => expAcc + expense.price, 0);
     }, 0);
 
     const totalExpenses = totalLabourCost + totalPrice;
@@ -113,19 +126,19 @@ const CreatePage = () => {
                                         <div className="flex justify-between">
                                             <span className="font-medium">Total Labour Cost:</span>
                                             <span className="font-medium">{plot.expenseDetails.reduce(
-                                                (acc: any, expense: any) => acc + Number(expense.labourCost), 0
+                                                (acc, expense) => acc + expense.labourCost, 0
                                             )}</span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="font-medium">Total Price:</span>
                                             <span className="font-medium">{plot.expenseDetails.reduce(
-                                                (acc: any, expense: any) => acc + Number(expense.price), 0
+                                                (acc, expense) => acc + expense.price, 0
                                             )}</span>
                                         </div>
                                         <div className="flex justify-between font-bold border-t border-gray-300 pt-2 mt-2">
                                             <span>Total Expenses:</span>
                                             <span>{plot.expenseDetails.reduce(
-                                                (acc: any, expense: any) => acc + Number(expense.labourCost) + Number(expense.price), 0
+                                                (acc, expense) => acc + expense.labourCost + expense.price, 0
                                             )}</span>
                                         </div>
                                     </>
@@ -161,5 +174,4 @@ const CreatePage = () => {
         </div>
     );
 };
-
 export default CreatePage;

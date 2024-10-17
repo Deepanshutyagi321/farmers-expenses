@@ -8,7 +8,7 @@ import userModel from "@/models/user";
 export async function POST(request: Request) {
     try {
         await dbConnect();
-        let {title} = await request.json();
+        const {title} = await request.json();
         
         if (!title) {
             return Response.json(

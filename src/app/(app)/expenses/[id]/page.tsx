@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -27,18 +26,27 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { expenseValidation } from "@/schemas/expenseValidation";
 import { Loader2 } from "lucide-react";
 
+// Define the type for an expense object
+interface Expense {
+  _id: string;
+  metrial: string;
+  labourCost: number;
+  price: number;
+  createdAt: string;
+}
+
 export default function Expenses({ params }: { params: { id: string } }) {
-  const [expenses, setExpenses] = useState<any[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]); // Set the explicit type
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
-  const [buttonLoading, setButtonLoading] = useState(false)
+  const [buttonLoading, setButtonLoading] = useState(false);
   const ploteId = params.id;
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   // Fetch expenses data
   useEffect(() => {
@@ -46,10 +54,9 @@ export default function Expenses({ params }: { params: { id: string } }) {
       setLoading(true);
       try {
         const response = await axios.get("/api/get-expenses", {
-          params: { id: ploteId }, // Ensure correct ID is passed
+          params: { id: ploteId },
         });
 
-        // console.log(response.data);
         setExpenses(response.data.expenses);
       } finally {
         setLoading(false);
@@ -73,19 +80,17 @@ export default function Expenses({ params }: { params: { id: string } }) {
   // Handle form submission for adding or updating expense
   const onSubmit = async (data: z.infer<typeof expenseValidation>) => {
     try {
-      setButtonLoading(true)
+      setButtonLoading(true);
       const response = await axios.post("/api/add-expenses", { data, ploteId });
       if (response.data.success) {
         toast({
           title: response.data.message,
           description: "The expense has been added successfully.",
-          duration: 2000
-        })
-        setOpen(false)
-        setButtonLoading(false)
-
+          duration: 2000,
+        });
+        setOpen(false);
+        setButtonLoading(false);
         window.location.reload();
-
       }
     } catch (error) {
       console.error("Error adding/updating expense:", error);
@@ -97,7 +102,6 @@ export default function Expenses({ params }: { params: { id: string } }) {
     try {
       const response = await axios.delete(`/api/delete-expenses`, {
         data: { expenseId, ploteId },
-
       });
 
       if (response.data.success) {
@@ -107,37 +111,28 @@ export default function Expenses({ params }: { params: { id: string } }) {
           description: "The expense has been deleted successfully.",
           duration: 2000,
           variant: "destructive",
-        })
+        });
       }
     } catch (error) {
       console.error("Error deleting expense:", error);
       toast({
         title: "Error deleting expense",
         description: "An error occurred while deleting the expense.",
-        duration: 2000
-      })
+        duration: 2000,
+      });
     }
-  }
-
-
+  };
 
   // Calculate totals for both labour cost and price
-  const totalLabourCost = expenses.reduce(
-    (acc, expense) => acc + expense.labourCost,
-    0
-  );
-  const totalPrice = expenses.reduce(
-    (acc, expense) => acc + expense.price,
-    0
-  );
+  const totalLabourCost = expenses.reduce((acc, expense) => acc + expense.labourCost, 0);
+  const totalPrice = expenses.reduce((acc, expense) => acc + expense.price, 0);
 
   if (loading) return <div>Loading...</div>;
-
 
   return (
     <div className="p-4">
       <Button onClick={() => setOpen(!open)} className="mb-4">
-        {!open ? "Add Expense" : "Close"}  {/* Toggle text */}
+        {!open ? "Add Expense" : "Close"}
       </Button>
       {open && (
         <div className="mb-4">
@@ -194,7 +189,7 @@ export default function Expenses({ params }: { params: { id: string } }) {
               />
               <Button type="submit">
                 {buttonLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Add Expense{/* Toggle button text */}
+                Add Expense
               </Button>
             </form>
           </Form>
@@ -216,22 +211,17 @@ export default function Expenses({ params }: { params: { id: string } }) {
           <tbody>
             {expenses.map((expense) => (
               <tr key={expense._id}>
-                <td className="border border-gray-300 px-4 py-2">
-                  {expense.metrial}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {expense.labourCost || 0}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {expense.price || 0}
-                </td>
+                <td className="border border-gray-300 px-4 py-2">{expense.metrial}</td>
+                <td className="border border-gray-300 px-4 py-2">{expense.labourCost || 0}</td>
+                <td className="border border-gray-300 px-4 py-2">{expense.price || 0}</td>
                 <td className="border border-gray-300 px-4 py-2">
                   {new Date(expense.createdAt).toLocaleString()}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-
                   <AlertDialog>
-                    <AlertDialogTrigger className="hover:cursor-pointer hover:font-bold">Remove</AlertDialogTrigger>
+                    <AlertDialogTrigger className="hover:cursor-pointer hover:font-bold">
+                      Remove
+                    </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -242,25 +232,20 @@ export default function Expenses({ params }: { params: { id: string } }) {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDelete(expense._id, ploteId)}>Continue</AlertDialogAction>
+                        <AlertDialogAction onClick={() => handleDelete(expense._id, ploteId)}>
+                          Continue
+                        </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-
                 </td>
               </tr>
             ))}
             <tr className="bg-gray-100 font-bold">
               <td className="border border-gray-300 px-4 py-2 text-center">Total</td>
-              <td className="border border-gray-300 px-4 py-2">
-                &#8377; {totalLabourCost}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                &#8377; {totalPrice}
-              </td>
-              <td className="border border-gray-300 px-4 py-2">
-                &#8377; {totalPrice + totalLabourCost}
-              </td>
+              <td className="border border-gray-300 px-4 py-2">&#8377; {totalLabourCost}</td>
+              <td className="border border-gray-300 px-4 py-2">&#8377; {totalPrice}</td>
+              <td className="border border-gray-300 px-4 py-2">&#8377; {totalPrice + totalLabourCost}</td>
             </tr>
           </tbody>
         </table>
