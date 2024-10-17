@@ -40,9 +40,11 @@ export default function Home() {
         </section>
 
         {/* Call to Action */}
+        <a href="/sign-in">
         <button className="bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">
           Get Started
         </button>
+        </a>
       </main>
 
       {/* Footer */}
