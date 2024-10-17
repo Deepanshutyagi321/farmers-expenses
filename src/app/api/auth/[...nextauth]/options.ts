@@ -29,7 +29,7 @@ export const authOptions = {
       return true;
     },
 
-    async session({ session, token }: { session: Session; token: JWT }) {
+    async session({ session}: { session: Session;  }) {
       await dbConnect();
       const user = await userModel.findOne({ email: session.user?.email });
       if (user && user._id) {
@@ -38,17 +38,6 @@ export const authOptions = {
       return session;
     },
 
-    async jwt({ token, user }: { token: JWT; user?: NextAuthUser }) {
-      await dbConnect();
-
-      if (user) {
-        const dbUser = await userModel.findOne({ email: user.email });
-        if (dbUser && dbUser._id) {
-          token.id = dbUser._id.toString();
-        }
-      }
-      return token;
-    },
   },
 };
 

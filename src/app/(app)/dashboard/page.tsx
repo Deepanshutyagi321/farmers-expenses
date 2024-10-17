@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export default function Dashboard() {
   const { status } = useSession();
-
+ 
   // Redirect if unauthenticated
   useEffect(() => {
     if (status === "unauthenticated") {

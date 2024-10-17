@@ -33,8 +33,8 @@ const CreatePage = () => {
                 } else {
                     setError(response.data.message);
                 }
-            } catch (err: any) {
-                setError(err.message); // Catch and set error
+            } catch (err) {
+                setError(err as string); // Catch and set error
             } finally {
                 setLoading(false); // Stop loading
             }
@@ -57,8 +57,8 @@ const CreatePage = () => {
             } else {
                 setError(response.data.message);
             }
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err) {
+            setError(err as string);
         }
     };
 
