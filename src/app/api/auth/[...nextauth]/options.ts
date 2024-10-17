@@ -3,7 +3,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import dbConnect from '@/lib/dbconnect';
 import userModel from '@/models/user';
 import { User as NextAuthUser, Session } from "next-auth";
-import { JWT } from "next-auth/jwt";
+
 
 export const authOptions = {
   providers: [
