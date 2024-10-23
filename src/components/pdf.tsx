@@ -1,4 +1,4 @@
-import jsPDF, { jsPDFAPI } from 'jspdf';
+import jsPDF from 'jspdf';
 import autoTable, { jsPDFConstructor } from 'jspdf-autotable';
 
 interface Expense {
