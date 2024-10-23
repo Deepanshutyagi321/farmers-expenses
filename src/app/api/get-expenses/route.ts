@@ -41,7 +41,7 @@ export async function GET(request: Request) {
         return Response.json({
             success: true,
             message: "Expenses fetched successfully",
-            expenses: plote.expenseDetails
+            expenses: plote
         }, {
             status: 200
         });

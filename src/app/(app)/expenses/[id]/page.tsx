@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
+import { Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { expenseValidation } from "@/schemas/expenseValidation";
 import { Loader2 } from "lucide-react";
+import downloadPDF from "@/components/pdf";
 
 // Define the type for an expense object
 interface Expense {
@@ -42,6 +44,7 @@ interface Expense {
 
 export default function Expenses({ params }: { params: { id: string } }) {
   const [expenses, setExpenses] = useState<Expense[]>([]); // Set the explicit type
+  const [plotTitle, setPlotTitle] = useState<string>(""); // Set the explicit type
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -57,7 +60,9 @@ export default function Expenses({ params }: { params: { id: string } }) {
           params: { id: ploteId },
         });
 
-        setExpenses(response.data.expenses);
+        setExpenses(response.data.expenses.expenseDetails);
+        setPlotTitle(response.data.expenses.title);
+        console.log(response)
       } finally {
         setLoading(false);
       }
@@ -249,6 +254,33 @@ export default function Expenses({ params }: { params: { id: string } }) {
             </tr>
           </tbody>
         </table>
+        
+<div className="mt-4">
+  <Button 
+    onClick={async () => {
+      const expenseData = expenses.map(expense => ({
+        createdAt: expense.createdAt,
+        metrial: expense.metrial,
+        labourCost: expense.labourCost,
+        price: expense.price,
+        plot: ploteId,
+      }));
+
+      setButtonLoading(true); // Show loading spinner
+      await downloadPDF(expenseData, plotTitle); // Await the PDF download function
+      setButtonLoading(false); // Hide loading spinner
+    }} 
+    className="flex items-center bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-4 py-2 transition duration-200"
+  >
+    {buttonLoading ? (
+      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+    ) : (
+      <Download className="mr-2 h-4 w-4" /> // Icon on the left
+    )}
+    {buttonLoading ? "Generating PDF..." : "Download Expense PDF"}
+  </Button>
+</div>
+
       </div>
     </div>
   );

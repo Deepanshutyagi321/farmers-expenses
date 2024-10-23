@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios"; // Importing axios
 import { useToast } from "@/hooks/use-toast";
 
+
 // Define the types for plot and expense
 interface Expense {
     labourCost: number;
@@ -30,6 +31,7 @@ const CreatePage = () => {
 
                 if (response.data.success) {
                     setPlots(response.data.plotes);
+                    console.log(response.data.plotes);
                 } else {
                     setError(response.data.message);
                 }
@@ -171,6 +173,7 @@ const CreatePage = () => {
                     Add New Plot
                 </button>
             </a>
+           
         </div>
     );
 };
